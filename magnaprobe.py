@@ -45,10 +45,8 @@ def consolidate_coords(df):
 	    latitude_int = df[int_deg_cols[0]].astype('float')
 	    longitude_int = df[int_deg_cols[1]].astype('float')
 	    
-	    # Only for N & W Hemishperes right now..
 	    df['Latitude'] = latitude_int + latitude_dd
-	    df['Longitude'] = longitude_int - longitude_dd
-
+	    df['Longitude'] = longitude_int + longitude_dd
 	return df
 
 
@@ -70,21 +68,18 @@ def convert_depth_cm_to_m(df):
 	        df['Snow Depth m'] = df[depth_cols[0]].astype('float') / 100.0
 	    else:
 	        df['Snow Depth m'] = df[depth_cols[0]].astype('float')
-
 	return df
 
 
-def trim_cols(df, cols_to_keep):
-
-	df = df[cols_to_keep]
+def trim_cols(df, list_of_cols_to_keep):
+	"""Remove all columns except list of columns specified by user to retain."""
+	df = df[list_of_cols_to_keep]
 	return df
 
 
 def create_geometry(df):
 	"""Add Geometry column to specify lat and lon are special, i.e. point vector data"""
-	df['geometry'] = df.apply(lambda x: Point((float(x['Longitude']),
-											   float(x['Latitude']))), 
-											   axis=1)
+	df['geometry'] = df.apply(lambda x: Point((float(x['Longitude']), float(x['Latitude']))), axis=1)
 	return df
 
 
@@ -115,7 +110,7 @@ def save_as_shp(gdf, out_dst):
 
 
 if __name__ == '__main__':
-
+	"""Clean Input File and Write UTM CSV and Shapefile"""
 	parser = argparse.ArgumentParser(description='Utility to Clean MagnaProbe Data.')
 	parser.add_argument('raw_data', metavar='d', type=str,
 	                     help='path to raw magnaprobe data file')
