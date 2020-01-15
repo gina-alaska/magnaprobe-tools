@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Module to Clean MagnaProbe Data
+# A Module to Clean MagnaProbe Data
 
 import pandas as pd
 from shapely.geometry import Point
@@ -8,7 +8,6 @@ import geopandas as gpd
 import argparse
 
 pd.options.mode.chained_assignment = None  # default='warn'
-
 
 def read_tabular(raw_file, header_row):
 	"""Read 'raw' MagnaProbe data (*. xls, *.dat, *.csv, etc.) to DataFrame"""
@@ -104,13 +103,13 @@ def convert_wgs_to_utm(gdf, epsg_code):
 
 
 def save_as_csv(df, out_dst):
-
+	"""Save a Clean CSV File"""
 	df.to_csv(out_dst, index=False)
 	print("CSV file written to %s" % out_dst)
 
 
 def save_as_shp(gdf, out_dst):
-
+	"""Save a point shapefile ready for GIS"""
 	gdf.to_file(out_dst)
 	print("Shapefile written to %s" % out_dst)
 
