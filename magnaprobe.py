@@ -76,6 +76,72 @@ def trim_cols(df, list_of_cols_to_keep):
 	df = df[list_of_cols_to_keep]
 	return df
 
+def drop_calibration_points(df, calibration_prefix, c1, c2):
+	"""Drop calibration points.
+
+	Calibration points are typically sequences of repeating or alternating
+	~0cm and ~120cm depth measurements. Ideally these are keyed with a
+	different counter number in the field (e.g. all start with 99...).
+	We can also check for the 0cm-120cm sequences if there is no such
+	counter prefix. Many sequences exist (e.g. 0-120-0, 120-0-0) so we test
+	for a few common ones.
+	"""
+
+	print("Starting number of rows: %s" % len(df))
+	# drop data with calibration prefix, e.g. 99
+	df = df[df.counter.str[:2] != str(calibration_prefix)]
+
+	print("Rows left after culling by counter prefix: %s" % len(df))
+
+	# find rows with depths near 0 m or 1.2 m 
+	mp_bottom = df['Snow Depth m'] < c1
+	mp_top = df['Snow Depth m'] > c2
+	# check if previous row is near 0 m or 1.2 m
+	prev_mp_bottom = df['Snow Depth m'].shift(-1) < c1
+	prev_mp_top = df['Snow Depth m'].shift(-1) > c2
+	# check if next row is near 0 m or 1.2 m
+	next_mp_bottom = df['Snow Depth m'].shift(+1) < c1
+	next_mp_top = df['Snow Depth m'].shift(+1) > c2
+	# check if 2nd previous row is near 0 m or 1.2 m
+	prev2_mp_bottom = df['Snow Depth m'].shift(-2) < c1
+	prev2_mp_top = df['Snow Depth m'].shift(-2) > c2
+	# check if 2nd next row is near 0 m or 1.2 m
+	next2_mp_bottom = df['Snow Depth m'].shift(+2) < c1
+	next2_mp_top = df['Snow Depth m'].shift(+2) > c2
+	# check if 3rd previous row is near 0 m or 1.2 m
+	prev3_mp_bottom = df['Snow Depth m'].shift(-3) < c1
+	prev3_mp_top = df['Snow Depth m'].shift(-3) > c2
+	# check if 3rd next row is near 0 m or 1.2 m
+	next3_mp_bottom = df['Snow Depth m'].shift(+3) < c1
+	next3_mp_top = df['Snow Depth m'].shift(+3) > c2
+	# A-B calibration patterns
+	# AA or BB is no good because that could stretch of scour or over-top
+	# depth too low and previous depth too high
+	cal1 = (mp_bottom) & (prev_mp_top)
+	# depth too low and next depth too high	
+	cal2 = (mp_bottom) & (next_mp_top)
+	# depth too high and previous depth too low
+	cal3 = (mp_top) & (prev_mp_bottom)
+	# depth too high and next depth too low	
+	cal4 = (mp_top) & (next_mp_bottom)
+	# A-A-B patterns
+	cal5 = (mp_bottom) & (prev_mp_bottom) & (prev2_mp_bottom)
+	cal6 = (mp_top) & (prev_mp_top) & (prev2_mp_top)
+	cal7 = (mp_bottom) & (next_mp_bottom) & (next2_mp_top)
+	cal8 = (mp_top) & (next_mp_top) & (next2_mp_bottom)
+	# A-A-A-B patterns
+	cal9 = (mp_bottom) & (prev_mp_bottom) & (prev2_mp_top) & (prev3_mp_top)
+	cal10 = (mp_top) & (prev_mp_top) & (prev2_mp_bottom) & (prev3_mp_bottom)
+	cal11 = (mp_bottom) & (next_mp_bottom) & (next2_mp_top) & (next3_mp_top)
+	cal12 = (mp_top) & (next_mp_top) & (next2_mp_bottom) & (next3_mp_bottom)
+	# OR condition for calibration patterns
+	cal_patterns = cal1 | cal2 | cal3 | cal4 | cal5 | cal6 | cal7 | cal8 |\
+	               cal9 | cal10 | cal11 | cal12
+	# drop rows matching calibration patterns
+	df = df.drop(df[cal_patterns].index)
+	print("Rows left after culling by calibration patterns: %s" % len(df))
+	return df
+
 
 def create_geometry(df):
 	"""Add Geometry column to specify lat and lon are special, i.e. point vector data"""
@@ -131,6 +197,7 @@ if __name__ == '__main__':
 	clean_df = trim_cols(df, ['timestamp', 'counter',
                                 'Latitude', 'Longitude',
                                 'Snow Depth m'])
+	drop_calibration_points(clean_df, 99, 0.02, 1.18)
 	print("Cleaned Data Preview:")
 	print(clean_df.head(3))
 	geom_df = create_geometry(clean_df)
