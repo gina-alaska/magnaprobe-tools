@@ -82,7 +82,7 @@ def trim_cols(df, cols_to_keep):
 
 
 def create_geometry(df):
-
+	"""Add Geometry column to specify lat and lon are special, i.e. point vector data"""
 	df['geometry'] = df.apply(lambda x: Point((float(x['Longitude']),
 											   float(x['Latitude']))), 
 											   axis=1)
@@ -90,22 +90,16 @@ def create_geometry(df):
 
 
 def create_geodataframe(df):
-
+	"""Create GeoDataFrame with WGS 84 Spatial Reference"""
 	gdf = gpd.GeoDataFrame(df, geometry='geometry')
-	
 	gdf.crs = ('epsg:4326')
-	
-	#gdf.crs = {'init' :'epsg:4326'}
 	return gdf
 
 
 def convert_wgs_to_utm(gdf, epsg_code):
-	
-	epsg_str = 'epsg:' + str(epsg_code)
-	
+	"""Convert WGS 84 GeoDataFrame to UTM GeoDataFrame"""
+	epsg_str = 'epsg:' + str(epsg_code)	
 	gdf_utm = gdf.to_crs(epsg_str)
-
-	#gdf_utm = gdf.to_crs({'init': epsg_str})
 	return gdf_utm
 
 
@@ -123,15 +117,16 @@ def save_as_shp(gdf, out_dst):
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser(description='Clean MagnaProbe Data.')
+	parser = argparse.ArgumentParser(description='Utility to Clean MagnaProbe Data.')
 	parser.add_argument('raw_data', metavar='d', type=str,
 	                     help='path to raw magnaprobe data file')
 	parser.add_argument('epsg_code', metavar='e', type=int,
-						 help='epsg code for UTM conversion, Zone 6N=32606')
+						 help='epsg code for UTM conversion, e.g. 32606 for 6N')
 	parser.add_argument('output_utm_shp', metavar='utmshp', type=str,
 	                     help='output UTM shapefile destination')
 	parser.add_argument('output_utm_csv', metavar='utmcsv', type=str,
                      	 help='output UTM CSV destination')
+	parser.epilog = "Example of use: python magnaprobe.py 'example_data/Geo2_4_raw.dat' 32606 'output_data/Geo2_4_UTM.shp' 'output_data/Geo2_4_UTM.csv'"
 	args = parser.parse_args()
 	
 	print("Cleaning MagnaProbe data file %s..." % args.raw_data)
