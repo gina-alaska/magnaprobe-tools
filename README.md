@@ -26,6 +26,9 @@ This repository is set of 'first cut' tools to check rapidly check out the natur
 
 **So you can quickly plot these:**
 
+![Geo24hist](output_data/Geo2_4_UTM_histogram.png)
+![Geo24line](output_data/Geo2_4_UTM_line_plot.png)
+![Geo24line](output_data/Geo2_4_UTM_depth_map.png)
 
 
 
