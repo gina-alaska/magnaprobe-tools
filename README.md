@@ -3,7 +3,9 @@
 
 The MagnaProbe is an automated snow depth measuring device that records a geolocated snow depth at the click of a button. See [Sturm & Holmgren (2018)](https://doi.org/10.1029/2018WR023559) for instrument details.
 
-This repository is set of 'first cut' tools to check rapidly check out the nature and quality of your MagnaProbe data and to quickly wrangle mess data that looks like this:
+This repository is a set of 'first cut' tools designed for rapidly checking the quality and nature of your MagnaProbe data. 
+
+**Wrangle messy data that looks like this:**
 
 | TOA5 | 29037 | CR800 | 29037 | CR800.Std.27 | CPU:Geophys2_GPSProbe.CR8 | 60528 | OperatorView |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 |------------------------|--------|---------|---------|--------------|---------------------------|------------|--------------|-------------|-------------|-----------------|------|-----------|------------|---------------|----------------|-------|------------|-----------|---------|---------|--------------|
@@ -28,7 +30,9 @@ This repository is set of 'first cut' tools to check rapidly check out the natur
 
 ![Geo24hist](output_data/Geo2_4_UTM_histogram.png)
 ![Geo24line](output_data/Geo2_4_UTM_line_plot.png)
-![Geo24line](output_data/Geo2_4_UTM_depth_map.png)
+![Geo24map](output_data/Geo2_4_UTM_depth_map.png)
+
+
 
 
 
