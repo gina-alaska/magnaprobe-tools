@@ -12,6 +12,7 @@ uaf_pantone420c = '#C7C9C7'
 uaf_gold = '#FFCD00'
 uaf_pantone_wheat = '#EFDBB2'
 uaf_red = '#A6192E'
+default_dpi = 144
 
 
 def read_clean_data(clean_file):
@@ -67,13 +68,13 @@ def line_plot(depths, title='MagnaProbe Snow Depth', save=False):
 	ax.set_title(title)
 	if save:
 
-		plt.savefig(save, dpi=144, bbox_inches='tight')
+		plt.savefig(save, dpi=default_dpi, bbox_inches='tight')
 		plt.show()
 	else:
 		plt.show()
 
 
-def plot_pdf(depths, n_bins, title='MagnaProbe Snow Depth', save=False):
+def plot_pdf(depths, n_bins=40, title='MagnaProbe Snow Depth', save=False):
 	"""Computes and plots a normalized PDF"""
 	fig, ax = plt.subplots(figsize=(8, 5))
 	hs_stats = compute_depth_stats(depths)
@@ -92,7 +93,7 @@ def plot_pdf(depths, n_bins, title='MagnaProbe Snow Depth', save=False):
 	ax.text(0.05, 0.95, tstr, transform=ax.transAxes,
     		fontsize=14, verticalalignment='top', bbox=box)
 	if save:
-		plt.savefig(save, dpi=144, bbox_inches='tight')
+		plt.savefig(save, dpi=default_dpi, bbox_inches='tight')
 		plt.show()
 	else:
 		plt.show()
@@ -100,6 +101,7 @@ def plot_pdf(depths, n_bins, title='MagnaProbe Snow Depth', save=False):
 
 def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
 	
+	dcol_name = [col for col in gdf.columns if 'depth' in col.lower()][0]
 	depths = get_depth(gdf)
 	hs_stats = compute_depth_stats(depths)
 	tstr, box = make_stat_annotation(hs_stats)
@@ -113,7 +115,7 @@ def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
 		
 	if type(gdf) == gpd.geodataframe.GeoDataFrame:
 		fig, ax = plt.subplots(1, 1, figsize=(fig_x, fig_y))
-		gdf.plot(column='Snow Depth', ax=ax, legend=True,
+		gdf.plot(column=dcol_name, ax=ax, legend=True,
 			legend_kwds={'label': "Snow Depth [m]",'orientation': "vertical"})
 		ax.set_ylabel('UTM $m$ N')
 		ax.set_xlabel('UTM $m$ E')
@@ -123,7 +125,7 @@ def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
 	else:
 		print("Todo: write x,y coords to csv upon crs transform")
 	if save:
-		plt.savefig(save, dpi=144, bbox_inches='tight')
+		plt.savefig(save, dpi=default_dpi, bbox_inches='tight')
 		plt.show()
 	else:
 		plt.show()
