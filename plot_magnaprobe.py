@@ -122,6 +122,7 @@ def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
 		ax.set_title(title)
 		ax.text(0.05, 0.95, tstr, transform=ax.transAxes,
     		fontsize=14, verticalalignment='top', bbox=box)
+		plt.setp(ax.xaxis.get_majorticklabels(), rotation=45)
 	else:
 		print("Todo: write x,y coords to csv upon crs transform")
 	if save:
