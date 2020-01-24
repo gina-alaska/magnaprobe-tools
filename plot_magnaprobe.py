@@ -16,6 +16,7 @@ default_dpi = 144
 
 
 def read_clean_data(clean_file):
+	"""Read MagnaProbe datafile already cleaned"""
 	if clean_file.endswith('.csv'):
 		df = pd.read_csv(clean_file)
 		return df
@@ -32,6 +33,7 @@ def get_depth(df):
 	
 
 def compute_depth_stats(depths):
+	"""Compute basic snow depth statistics."""
 
 	hs_N = int(len(depths))
 	hs_min = np.min(depths)
@@ -43,20 +45,21 @@ def compute_depth_stats(depths):
 	
 
 def make_stat_annotation(hs_stats):
-			  #'$\mu=%.2f$\n $\sigma=%.2f$\nmin = %.2f\nmax = %.2f'
-	
+	"""Create annotation box with basic stats inside."""
+
 	textstr = 'N = %d\nmin = %.2f\nmax = %.2f\n$\mu=%.2f$\n$\sigma=%.2f$' % hs_stats
-	props = dict(boxstyle='round',
-				 facecolor=uaf_pantone_wheat, alpha=0.66)
+	props = dict(boxstyle='round', facecolor=uaf_pantone_wheat, alpha=0.5)
 	return textstr, props
 	
 
 def append_id(fname, id):
-    return fname.split('.')[0] + '_' + id + '.' + fname.split('.')[1]
+	"""Utility function to rename output data"""
+	return fname.split('.')[0] + '_' + id + '.' + fname.split('.')[1]
 
 
 def line_plot(depths, title='MagnaProbe Snow Depth', save=False):
 	"""Generates Line Plot. Good for single transects."""
+	
 	hs_stats = compute_depth_stats(depths)
 	tstr, box = make_stat_annotation(hs_stats)
 	fig, ax = plt.subplots(figsize=(8, 5))
@@ -91,7 +94,7 @@ def plot_pdf(depths, n_bins=40, title='MagnaProbe Snow Depth', save=False):
 	ax.set_ylabel('Normalized Frequency')
 	ax.set_title(title)
 	ax.text(0.05, 0.95, tstr, transform=ax.transAxes,
-    		fontsize=14, verticalalignment='top', bbox=box)
+    		fontsize=12, verticalalignment='top', bbox=box)
 	if save:
 		plt.savefig(save, dpi=default_dpi, bbox_inches='tight')
 		plt.show()
@@ -100,7 +103,7 @@ def plot_pdf(depths, n_bins=40, title='MagnaProbe Snow Depth', save=False):
 
 
 def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
-	
+	"""Create map of probe locations with points colored by depth"""	
 	dcol_name = [col for col in gdf.columns if 'depth' in col.lower()][0]
 	depths = get_depth(gdf)
 	hs_stats = compute_depth_stats(depths)
@@ -131,6 +134,7 @@ def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
 	else:
 		plt.show()
 
+
 if __name__ == '__main__':
 	"""Generate Plots from Cleaned MagnaProbe Data"""
 	parser = argparse.ArgumentParser(description='Plot Clean MagnaProbe Data.')
@@ -148,11 +152,11 @@ if __name__ == '__main__':
 	if args.save_plots:
 		print("Saving figures to output_data directory.")
 		line_plot(snow_depths, title=title, save=append_id(fname_out, 'line_plot'))
-		plot_pdf(snow_depths, 40, title=title, save=append_id(fname_out, 'histogram'))
+		plot_pdf(snow_depths, title=title, save=append_id(fname_out, 'histogram'))
 		map_depth(clean_df, title=title, save=append_id(fname_out, 'depth_map'))
 	else:
 		print("Not Saving Figures.")
 		line_plot(snow_depths, title=title)
-		plot_pdf(snow_depths, 40, title=title)
+		plot_pdf(snow_depths, title=title)
 		map_depth(clean_df, title=title)
 	print("Plotting Complete.")
