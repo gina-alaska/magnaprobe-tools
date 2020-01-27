@@ -33,8 +33,18 @@ This repository is a set of 'first cut' tools designed for rapidly checking the 
 ![Geo24map](output_data/Geo2_4_UTM_depth_map.png)
 
 
+### Dependencies
+* geopandas 0.6.2
+* pandas 0.25.3
+* matplotlib 3.1.2
+* numpy 1.17.3
 
+### Usage Examples
+``python magnaprobe.py 'example_data/Geo2_4_raw.dat' 32606 'output_data/Geo2_4_UTM.shp' 'output_data/Geo2_4_UTM.csv``
 
+``python plot_magnaprobe.py output_data/Geo1_6_UTM.shp --save_plots true``
+
+``python batch_magnaprobe.py example_data/batch_example/ output_data/batch_output/Geo1``
 
 
 
