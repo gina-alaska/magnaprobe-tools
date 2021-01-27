@@ -109,7 +109,7 @@ def drop_calibration_points(df, calibration_prefix, cal_lower, cal_upper):
     print("Rows left after culling by counter prefix: %s" % len(dfc))
 
     # find rows with depths near cal_lower or cal_upper
-    # this gets gnarly and should be abstracted away to a dict using a loop
+    # this gets GNARLY and should be abstracted away to a dict using a loop
     mp_bottom = dfc['Snow Depth m'] < cal_lower
     mp_top = dfc['Snow Depth m'] > cal_upper
     # check previous row
@@ -154,8 +154,17 @@ def drop_calibration_points(df, calibration_prefix, cal_lower, cal_upper):
         cal9 | cal10 | cal11 | cal12
     # drop rows matching calibration patterns
     df2 = dfc.drop(dfc[cal_patterns].index)
-    print("Rows left after culling by calibration patterns: %s" % len(df2))
+    print("Rows left ec culling by calibration patterns: %s" % len(df2))
     return df2
+
+
+def zero_out_near_zero_depths(df, tol):
+    """MagnaProbe values drift around and sometimes zero depths are recorded
+    as slightly negative or slightly above e.g. 0.01 m of snow. We will turn
+    depths within a tolerance to zero."""
+    df['Snow Depth m']
+    df['Snow Depth m'] = [x if x >= 0 else 0 for x in df['Snow Depth m']]
+    return df
 
 
 def create_geometry(df):
@@ -215,6 +224,7 @@ if __name__ == '__main__':
     df = trim_cols(df, ['timestamp', 'counter', 'Latitude',
                         'Longitude', 'Snow Depth m'])
     df = drop_calibration_points(df, 99, 0.02, 1.18)
+    df = zero_out_near_zero_depths(df, 0.01)
     print("Cleaned Data Preview:")
     print(df.head(5))
     geom_df = create_geometry(df)
