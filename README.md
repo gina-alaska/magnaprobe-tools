@@ -39,15 +39,11 @@ This repository is a set of 'first cut' tools designed for rapidly checking the 
 * matplotlib 3.1.2
 * numpy 1.17.3
 
+### Warnings
+The tools are intended to be flexible, but are configured largely for a "stock" MagnaProbe configurations. Non-English language users or users with differently programmed hardware will need to tweak field names, calibration patterns, etc.
+
 ### Usage Examples
-``python magnaprobe.py 'example_data/Geo2_4_raw.dat' 32606 'output_data/Geo2_4_UTM.shp' 'output_data/Geo2_4_UTM.csv``
 
-``python plot_magnaprobe.py output_data/Geo1_6_UTM.shp --save_plots true``
+``python magnaprobe.py example_data/Geo2_4_raw.dat 32606 output_data/Geo2_4_UTM.shp output_data/Geo2_4_UTM.csv``
 
-``python batch_magnaprobe.py example_data/batch_example/ output_data/batch_output/Geo1``
-
-
-
-
-
-
+``python plot_magnaprobe.py output_data/Geo2_4_UTM.shp --save_plots true``
