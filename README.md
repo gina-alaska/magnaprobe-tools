@@ -40,7 +40,7 @@ This repository is a set of 'first cut' tools designed for rapidly checking the 
 * numpy 1.17.3
 
 ### Warnings
-The tools are intended to be flexible, but are configured largely for a "stock" MagnaProbe configurations. Non-English language users or users with differently programmed hardware will need to tweak field names, calibration patterns, etc.
+The tools are intended to be flexible, but are configured largely for a "stock" MagnaProbe configurations. Non-English language users or users with differently programmed hardware will need to tweak field names, calibration patterns, etc. Finally, this is not a 100% process. If you closely, there are still some suspect points in the example data...but one of the reasons to rapidly generate the quick and dirty plots is to look for instrument errors or data that should be discarded!
 
 ### Usage Examples
 
