@@ -125,7 +125,7 @@ def map_depth(gdf, title='MagnaProbe Snow Depth Map', save=False):
         ax.set_ylabel('UTM $m$ N')
         ax.set_xlabel('UTM $m$ E')
         ax.set_title(title)
-        ax.text(0.8, 0.5, tstr, transform=ax.transAxes,
+        ax.text(0.70, 0.65, tstr, transform=ax.transAxes,
                 fontsize=14, verticalalignment='top', bbox=box)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation=45)
     else:
