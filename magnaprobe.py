@@ -3,6 +3,7 @@
 import pandas as pd
 import geopandas as gpd
 import argparse
+import numpy as np
 from shapely.geometry import Point
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -189,6 +190,12 @@ def convert_wgs_to_utm(gdf, epsg_code):
     return gdf_utm
 
 
+def control_coord_precision(df):
+    """Reduce coordinate precision."""
+    df.geometry = [Point(np.round(p.x,2), np.round(p.y,2))for p in df.geometry]
+    return df
+
+
 def save_as_csv(df, out_dst):
     """Save clean data to CSV"""
     df.to_csv(out_dst, index=False)
@@ -230,6 +237,7 @@ if __name__ == '__main__':
     geom_df = create_geometry(df)
     gdf = create_geodataframe(geom_df)
     utm_df = convert_wgs_to_utm(gdf, args.epsg_code)
+    utm_df = control_coord_precision(utm_df)
     print("UTM-Converted Preview: ")
     print(utm_df.head(5))
     save_as_csv(utm_df, args.output_utm_csv)
