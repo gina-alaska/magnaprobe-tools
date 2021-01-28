@@ -19,17 +19,13 @@ This repository is a set of 'first cut' tools designed for rapidly checking the 
 
 **To a table like this:**
 
-| timestamp | counter | Latitude | Longitude | Snow Depth m | geometry |
-|------------------------|---------|-------------|--------------|--------------|---------------------------------------------|
-| 2017-11-14 11:27:00.75 | 100001 | 65.04120666 | -147.416985 | 0.07283 | POINT (480366.7874728901 7213111.766199158) |
-| 2017-11-14 15:14:14.75 | 100002 | 65.04120666 | -147.4169383 | 0.07732 | POINT (480368.9862584753 7213111.751691903) |
-| 2017-11-14 15:14:15 | 100003 | 65.04120166 | -147.4169117 | 0.04138 | POINT (480370.2349955766 7213111.186195726) |
+|    | timestamp              |   counter |   Latitude |   Longitude |   Snow Depth m | geometry                     |\n|---:|:-----------------------|----------:|-----------:|------------:|---------------:|:-----------------------------|\n|  0 | 2017-11-14 15:24:38.5  |    100002 |    65.0403 |    -147.418 |         0.7892 | POINT (480320.68 7213010.28) |\n|  1 | 2017-11-14 15:24:39    |    100003 |    65.0403 |    -147.418 |         0.7684 | POINT (480320.76 7213010.46) |\n|  2 | 2017-11-14 15:24:39.5  |    100004 |    65.0403 |    -147.418 |         0.7735 | POINT (480320.76 7213011.02) |\n|  3 | 2017-11-14 15:24:40.25 |    100005 |    65.0403 |    -147.418 |         0.728  | POINT (480321.62 7213010.83) |
 
 
 **So you can quickly plot these:**
 
 ![Geo24hist](output_data/Geo2_4_UTM_histogram.png)
-![Geo24line](output_data/Geo2_4_UTM_line_plot.png)
+
 ![Geo24map](output_data/Geo2_4_UTM_depth_map.png)
 
 
@@ -40,7 +36,7 @@ This repository is a set of 'first cut' tools designed for rapidly checking the 
 * numpy 1.17.3
 
 ### Warnings
-The tools are intended to be flexible, but are configured largely for a "stock" MagnaProbe configurations. Non-English language users or users with differently programmed hardware will need to tweak field names, calibration patterns, etc. Finally, this is not a 100% process. If you closely, there are still some suspect points in the example data...but one of the reasons to rapidly generate the quick and dirty plots is to look for instrument errors or data that should be discarded!
+The tools are intended to be flexible, but are configured largely for a "stock" MagnaProbe. Non-English language users or users with differently programmed hardware will need to tweak field names, calibration patterns, etc. Finally, this is not a 100% process. If you look closely, there may still be suspect points in the example data - but one of the reasons to rapidly generate the quick and dirty plots is to look for instrument errors or for data that should be discarded.
 
 ### Usage Examples
 
